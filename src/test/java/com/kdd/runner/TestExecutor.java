@@ -6,8 +6,8 @@ import java.util.Map.Entry;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.kdd.reports.ReportManager;
 import com.kdd.utility.Log;
-import com.kdd.utility.ReportManager;
 
 public class TestExecutor extends TestBase{
 

@@ -1,4 +1,4 @@
-package com.kdd.utility;
+package com.kdd.reports;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.kdd.config.Config;
 import com.kdd.config.GlobalVariables;
+import com.kdd.utility.DateUtility;
 
 public class ReportUtil implements GlobalVariables{
 	public static int scriptNumber = 1;

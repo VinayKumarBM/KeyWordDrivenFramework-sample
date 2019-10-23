@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.kdd.actions.ActionsClass;
 import com.kdd.exceptions.InvalidKeywordException;
+import com.kdd.reports.ReportManager;
+import com.kdd.reports.ReportUtil;
 import com.kdd.utility.ExcelReader;
-import com.kdd.utility.ReportManager;
-import com.kdd.utility.ReportUtil;
 import com.kdd.utility.ScreenshotUtility;
 
 public class Executor implements GlobalVariables{

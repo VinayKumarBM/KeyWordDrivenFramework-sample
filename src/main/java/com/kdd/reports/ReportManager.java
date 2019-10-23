@@ -1,4 +1,4 @@
-package com.kdd.utility;
+package com.kdd.reports;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,7 +34,6 @@ public class ReportManager implements GlobalVariables{
 	}
 
 	public static synchronized void endTest() {
-		System.out.println("ending test report");
 		getInstance().flush();
 	}
 

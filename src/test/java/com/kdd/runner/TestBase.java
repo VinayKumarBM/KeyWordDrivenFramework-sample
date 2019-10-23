@@ -14,11 +14,11 @@ import com.kdd.config.Directory;
 import com.kdd.config.DriverManager;
 import com.kdd.config.Executor;
 import com.kdd.config.GlobalVariables;
+import com.kdd.reports.ReportManager;
+import com.kdd.reports.ReportUtil;
 import com.kdd.utility.DateUtility;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.Log;
-import com.kdd.utility.ReportManager;
-import com.kdd.utility.ReportUtil;
 
 public class TestBase implements GlobalVariables{
 	
