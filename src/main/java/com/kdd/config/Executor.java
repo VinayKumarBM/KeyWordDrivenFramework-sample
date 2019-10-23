@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.kdd.actions.ActionsClass;
+import com.kdd.exceptions.InvalidKeywordException;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.ReportManager;
 import com.kdd.utility.ReportUtil;
@@ -60,11 +61,16 @@ public class Executor implements GlobalVariables{
 	}
 
 	private void executeAction(String keyword, String locator, String selector, String value) throws Exception {		
+		boolean keywordFound = false;
 		for(int i = 0;i < method.length;i++){
 			if(method[i].getName().equals(keyword)){
 				method[i].invoke(keywordActions,locator, selector, value);
+				keywordFound = true;
 				break;
 			}
+		}
+		if(!keywordFound) {
+			throw new InvalidKeywordException("Invalid Keyword "+keyword);
 		}
 	}
 }

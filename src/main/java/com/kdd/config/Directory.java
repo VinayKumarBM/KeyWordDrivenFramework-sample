@@ -12,13 +12,12 @@ public class Directory {
 	private static final Logger log = Logger.getLogger(Directory.class.getName());
 
 	public boolean create(String folderPath) {
-		System.out.println("Creating the files in the folder");
 		Path path = Paths.get(folderPath);
 		//if directory exists?
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectories(path);
-				log.info("Directory was created.\n"+folderPath);
+				log.info("Directory was created\n"+folderPath);
 				return true;
 			} catch (IOException exp) {
 				log.error(exp.getMessage(), exp);
@@ -29,7 +28,6 @@ public class Directory {
 	}
 
 	public void delete(String folderPath) {
-		System.out.println("Deleting the files in the folder");
 		File folder = new File(folderPath);
 		if(folder.exists()) {
 			for(String file: folder.list()){
@@ -40,6 +38,7 @@ public class Directory {
 	}
 
 	public void clearFolder(String folderPath) {
+		log.info("Clearing content in below folder: \n"+folderPath);
 		delete(folderPath);
 		create(folderPath);
 	}

@@ -1,7 +1,5 @@
 package com.kdd.runner;
 
-import static org.testng.Assert.fail;
-
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,16 +12,12 @@ import com.kdd.utility.ReportManager;
 public class TestExecutor extends TestBase{
 
 	@Test (dataProvider = "testCasesList")
-	public void testCasesExecutor(int testRow, String testCase) {
+	public void testCasesExecutor(int testRow, String testCase) throws Exception {
 		testCaseName = testCase;
 		testCaseRow = testRow;
 		Log.startTestCase(testCaseName);
 		ReportManager.startTest(testCaseName);
-		try {
-			executor.executeTestCase(testCaseName);
-		} catch (Exception e) {			
-			fail("Exception Occured while executing the step:\n", e);
-		}			
+		executor.executeTestCase(testCaseName);
 	}
 
 	@DataProvider (name = "testCasesList")

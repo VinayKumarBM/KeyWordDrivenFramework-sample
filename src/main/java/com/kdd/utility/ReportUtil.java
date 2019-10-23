@@ -109,7 +109,6 @@ public class ReportUtil implements GlobalVariables{
 	}
 
 	public static void endSuite() {
-		System.out.println("Adding End of Suite");
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {
@@ -118,7 +117,6 @@ public class ReportUtil implements GlobalVariables{
 			out.write("</table>\n");
 			out.close();
 		} catch (Exception e) {
-			System.out.println("End of Suite exception");
 			log.info("Error: " + e.getMessage());
 		} finally {
 			fstream = null;
@@ -131,7 +129,6 @@ public class ReportUtil implements GlobalVariables{
 		BufferedWriter out = null;
 		String testFilePath = customRerportPath+ suiteName + "_" + testCaseName + ".html";
 		try {
-			System.out.println("adding test case to report");
 			// build the keywords page
 			if (status.equalsIgnoreCase("Skipped") || status.equalsIgnoreCase("Skip")) {
 
@@ -202,13 +199,11 @@ public class ReportUtil implements GlobalVariables{
 			out.write("</tr>\n");
 			scriptNumber++;
 		} catch (IOException e) {
-			System.out.println("Exeception while adding Test Case");
 			e.printStackTrace();
 		} finally {
 			try {								
 				out.close();
 			} catch (IOException e) {
-				System.out.println("Finally Exeception while adding Test Case");
 				e.printStackTrace();
 			}
 		}
@@ -227,7 +222,7 @@ public class ReportUtil implements GlobalVariables{
 
 	public static void updateEndTime() {
 		StringBuffer buf = new StringBuffer();
-		try {System.out.println("updating end time");
+		try {
 			// Open the file that is the first
 			FileInputStream fstream = new FileInputStream(resultFilename);
 			DataInputStream in = new DataInputStream(fstream);
@@ -243,13 +238,11 @@ public class ReportUtil implements GlobalVariables{
 			}
 			// Close the input stream
 			in.close();
-			//System.out.println(buf);
 			FileOutputStream fos = new FileOutputStream(resultFilename);
 			DataOutputStream output = new DataOutputStream(fos);
 			output.writeBytes(buf.toString());
 			fos.close();
 		} catch (Exception e) {// Catch exception if any
-			System.out.println("ending test report exception");
 			log.error("Error: " + e.getMessage());
 		}
 	}

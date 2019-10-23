@@ -20,18 +20,18 @@ public interface GlobalVariables {
 
 	// Columns in Test Case sheet
 	int testStepsColumn = 0;
-	int keywordColumn = 1;
-	int objectsColumn = 2;
-	int locatorsColumn = 3;
-	int valuesColumn = 4;
-	int testStepDescriptionColumn = 5;
+	int testStepDescriptionColumn = 1;
+	int keywordColumn = 2;
+	int objectsColumn = 3;
+	int locatorsColumn = 4;
+	int valuesColumn = 5;	
 
 	String PASS = "PASS";
 	String FAIL = "FAIL";
 	String SKIP = "SKIP";
 
 	// Wait times
-	long implicitWaitTime = 15;
+	long implicitWaitTime = 10;
 	long objectWaitTime = 30;
 
 	// Screenshot folder and file details

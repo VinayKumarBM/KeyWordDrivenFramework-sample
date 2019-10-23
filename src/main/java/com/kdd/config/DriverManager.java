@@ -19,12 +19,12 @@ public class DriverManager implements GlobalVariables{
 	public static WebDriver launchBrowser() {
 		String browser = Config.getProperty("browser");
 
-	//	if(browser.equalsIgnoreCase("CHROME")) {
+		if(browser.equalsIgnoreCase("CHROME")) {
 			System.setProperty("webdriver.chrome.driver", chromePath);
 			ChromeOptions option = new ChromeOptions();
 			option.addArguments("--disable-infobars;");
 			driver = new ChromeDriver(option);		
-	//	}
+		}
 		driver.get(baseURL);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(implicitWaitTime, TimeUnit.SECONDS);

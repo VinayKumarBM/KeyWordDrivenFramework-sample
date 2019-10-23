@@ -10,28 +10,27 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.kdd.exceptions.InvalidLocatorException;
+
 public class ElementOperations {
 
 	private static WebDriver driver;
 
 	public void setDriver(WebDriver driver) {
-		if(driver!=null)
-			ElementOperations.driver = driver;
-		else 
-			new Throwable("Driver was not set in Element Operation");
+		ElementOperations.driver = driver;
 	}
 
-	public static WebElement getElement(String locator, String selector) {
+	public static WebElement getElement(String locator, String selector) throws InvalidLocatorException {
 		WebElement element = driver.findElement(getElementBy(locator, selector));
 		return element;
 	}
 
-	public static List<WebElement> getElements(String locator, String selector) {
+	public static List<WebElement> getElements(String locator, String selector) throws InvalidLocatorException {
 		List<WebElement> elements = driver.findElements(getElementBy(locator, selector));
 		return elements;
 	}
 
-	private static By getElementBy(String locator, String selector) {
+	private static By getElementBy(String locator, String selector) throws InvalidLocatorException {
 		By byLocator = null;
 		switch (locator.toLowerCase()) {
 		case "id": {
@@ -67,18 +66,18 @@ public class ElementOperations {
 			break;
 		}
 		default:{
-			new Exception("Invalid Object selector type");
+			throw new InvalidLocatorException("Invalid Locator type "+locator);
 		}
 		}
 		return byLocator;
 	}
 
-	public static WebElement waitForVisiblityOfElement(String locator, String selector, long timeOutInSeconds) {
+	public static WebElement waitForVisiblityOfElement(String locator, String selector, long timeOutInSeconds) throws InvalidLocatorException {
 		WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
 		return wait.until(ExpectedConditions.visibilityOf(getElement(locator, selector)));
 	}
 
-	public static void switchToFrame(String locator, String selector) {
+	public static void switchToFrame(String locator, String selector) throws InvalidLocatorException {
 		driver.switchTo().frame(getElement(locator, selector));
 	}
 
@@ -86,12 +85,12 @@ public class ElementOperations {
 		driver.switchTo().defaultContent();
 	}
 
-	public static void moveToObjectAndClick(String locator, String selector) {
+	public static void moveToObjectAndClick(String locator, String selector) throws InvalidLocatorException {
 		Actions action = new Actions(driver);
 		action.moveToElement(getElement(locator, selector)).click().build().perform();
 	}
 
-	public static void selectFromDropdown(String locator, String selector, String value) {
+	public static void selectFromDropdown(String locator, String selector, String value) throws InvalidLocatorException {
 		new Select(getElement(locator, selector)).selectByVisibleText(value);
 	}
 }
