@@ -16,17 +16,18 @@ import com.kdd.utility.ElementOperations;
 public class ActionsClass implements GlobalVariables{
 
 	private final Logger Log = Logger.getLogger(ActionsClass.class.getName());
+	ElementOperations dom = new ElementOperations();
 	
 	public void click (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.getElement(locator, selector).click();
+		dom.getElement(locator, selector).click();
 	}
 	
 	public void enterText (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.getElement(locator, selector).sendKeys(value);
+		dom.getElement(locator, selector).sendKeys(value);
 	}
 
 	public void clearAndEnterText (String locator, String selector, String value) throws InvalidLocatorException {
-		WebElement element = ElementOperations.getElement(locator, selector);
+		WebElement element = dom.getElement(locator, selector);
 		element.clear();
 		element.sendKeys(value);
 	}
@@ -38,39 +39,39 @@ public class ActionsClass implements GlobalVariables{
 	}
 	
 	public void validateDataOnScreenMatches (String locator, String selector, String value) throws InvalidLocatorException {
-		String onScreenText = ElementOperations.getElement(locator, selector).getText();
+		String onScreenText = dom.getElement(locator, selector).getText();
 		Log.info("Data on the screen: "+onScreenText);
 		assertEquals(onScreenText, value, "On Screen Text did not match");
 	}
 	
 	public void waitForObjectToAppear (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.waitForVisiblityOfElement(locator, selector, objectWaitTime);
+		dom.waitForVisiblityOfElement(locator, selector, objectWaitTime);
 	}
 	
 	public void switchToFrame (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.switchToFrame(locator, selector);
+		dom.switchToFrame(locator, selector);
 	}
 	
 	public void switchToDefaultContent (String locator, String selector, String value) {
-		ElementOperations.switchToDefaultContent();
+		dom.switchToDefaultContent();
 	}
 	
 	public void moveToObjectAndClick (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.moveToObjectAndClick(locator, selector);
+		dom.moveToObjectAndClick(locator, selector);
 	}
 	
 	public void selectFromDropdown (String locator, String selector, String value) throws InvalidLocatorException {
-		ElementOperations.selectFromDropdown(locator, selector, value);
+		dom.selectFromDropdown(locator, selector, value);
 	}
 	
 	public void validateDataOnScreenContains (String locator, String selector, String value) throws InvalidLocatorException {
-		String onScreenText = ElementOperations.getElement(locator, selector).getText().toLowerCase();
+		String onScreenText = dom.getElement(locator, selector).getText().toLowerCase();
 		Log.info("Text on screen: "+onScreenText);
 		assertTrue(onScreenText.contains(value.toLowerCase()), "On screen text "+onScreenText+" did not contain "+value.toLowerCase());
 	}
 	
 	public void validateSearchResults (String locator, String selector, final String value) throws InvalidLocatorException {
-		List<WebElement> eleList = ElementOperations.getElements(locator, selector);
+		List<WebElement> eleList = dom.getElements(locator, selector);
 		Session.setVariable("resultCount", eleList.size());
 		eleList.stream().forEach(rs->{
 			Log.info(rs.getText());
@@ -79,7 +80,7 @@ public class ActionsClass implements GlobalVariables{
 	}
 	
 	public void validateSearchResultCount (String locator, String selector, String value) throws InvalidLocatorException {
-		String resultCountDetails = ElementOperations.getElement(locator, selector).getText();
+		String resultCountDetails = dom.getElement(locator, selector).getText();
 		assertTrue(resultCountDetails.contains(String.valueOf(Session.getVariable().get("resultCount"))));
 	}
 	

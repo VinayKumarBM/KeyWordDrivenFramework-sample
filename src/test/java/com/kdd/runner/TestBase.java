@@ -2,7 +2,6 @@ package com.kdd.runner;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -23,7 +22,6 @@ import com.kdd.utility.Log;
 public class TestBase implements GlobalVariables{
 	
 	final Logger Logs = Logger.getLogger(TestBase.class.getName());
-	private WebDriver driver;
 	Executor executor = new Executor();
 	String testCaseName;
 	int testCaseRow;
@@ -46,7 +44,7 @@ public class TestBase implements GlobalVariables{
 	@BeforeMethod
 	public void initialization() {
 		testStartTime = DateUtility.getStringDate("hh.mm.ss aaa");
-		driver = DriverManager.launchBrowser();
+		DriverManager.getDriver();
 	}
 	
 	@AfterMethod
@@ -63,7 +61,7 @@ public class TestBase implements GlobalVariables{
 		ExcelReader.setCellData(status, testCaseRow, resultColumn, testDataPath);
 		ReportUtil.addTestCase(testCaseName, testStartTime, DateUtility.getStringDate("hh.mm.ss aaa"), status);				
 		ReportManager.endTest();
-		driver.quit();
+		DriverManager.quit();
 		Log.endTestCase(testCaseName+" "+status);
 	}
 	

@@ -6,17 +6,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import com.kdd.utility.ElementOperations;
-
 public class DriverManager implements GlobalVariables{
 
 	private static WebDriver driver;
+	
+	private DriverManager() {
+		if(driver == null) {
+			driver = launchBrowser();
+		}
+	}
 
 	public static WebDriver getDriver() {
+		new DriverManager();
 		return driver;
 	}
 
-	public static WebDriver launchBrowser() {
+	private static WebDriver launchBrowser() {
 		String browser = Config.getProperty("browser");
 
 		if(browser.equalsIgnoreCase("CHROME")) {
@@ -28,7 +33,12 @@ public class DriverManager implements GlobalVariables{
 		driver.get(baseURL);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(implicitWaitTime, TimeUnit.SECONDS);
-		new ElementOperations().setDriver(driver);
+//		new ElementOperations().setDriver(driver);
 		return driver;
+	}
+
+	public static void quit() {
+		getDriver().quit();
+		driver = null;
 	}
 }
