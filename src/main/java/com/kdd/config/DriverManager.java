@@ -9,16 +9,18 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class DriverManager implements GlobalVariables{
 
 	private static WebDriver driver;
+	private static ThreadLocal<WebDriver> tdriver = new ThreadLocal<WebDriver>();
 	
 	private DriverManager() {
 		if(driver == null) {
 			driver = launchBrowser();
+			tdriver.set(driver);
 		}
 	}
 
-	public static WebDriver getDriver() {
+	public static synchronized WebDriver getDriver() {
 		new DriverManager();
-		return driver;
+		return tdriver.get();
 	}
 
 	private static WebDriver launchBrowser() {
@@ -40,5 +42,6 @@ public class DriverManager implements GlobalVariables{
 	public static void quit() {
 		getDriver().quit();
 		driver = null;
+		tdriver.set(driver);
 	}
 }
