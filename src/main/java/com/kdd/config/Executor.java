@@ -15,8 +15,6 @@ import com.kdd.utility.ScreenshotUtility;
 
 public class Executor implements GlobalVariables{
 
-	private ActionsClass keywordActions = new ActionsClass();
-	private Method method[] = keywordActions.getClass().getMethods();
 	private final Logger Log = Logger.getLogger(Executor.class.getName());
 
 	public Map<Integer, String> getListOfTestCasesToExecute() {
@@ -33,22 +31,22 @@ public class Executor implements GlobalVariables{
 		String objectArray[];
 		int numberOfRows = ExcelReader.getNumberOfRows(testCaseID);
 		for (int iRow = 1; iRow < numberOfRows; iRow++){
-			keyword = ExcelReader.getCellData(iRow, keywordColumn);
-			selector = new ObjectReader().getObjectProperty(ExcelReader.getCellData(iRow, objectsColumn));
+			keyword = ExcelReader.getCellData(iRow, keywordColumn, testCaseID);
+			selector = new ObjectReader().getObjectProperty(ExcelReader.getCellData(iRow, objectsColumn, testCaseID));
 			if(selector !=null) {
 				objectArray = selector.split(":");
 				locator = objectArray[0].trim();
 				selector = objectArray[1].trim();
 			}
-			value = ExcelReader.getCellData(iRow, valuesColumn);
-			stepDesc = ExcelReader.getCellData(iRow, testStepDescriptionColumn);			
+			value = ExcelReader.getCellData(iRow, valuesColumn, testCaseID);
+			stepDesc = ExcelReader.getCellData(iRow, testStepDescriptionColumn, testCaseID);			
 			Log.info("Keyword: "+keyword+" Locator: "+ locator+" Selector: "+ selector+" Value: "+ value);			
 			try {
 				executeAction(keyword, locator, selector, value);			
 			} catch (Exception e) {
 				Log.error("Exception Occured while executing the step:\n", e);
 				ReportManager.getTest().fail(e);
-				String imageFilePath = ScreenshotUtility.takeScreenShot(DriverManager.getDriver(), testCaseID);
+				String imageFilePath = ScreenshotUtility.takeScreenShot(DriverManager.getInstance().getDriver(), testCaseID);
 				ReportManager.getTest().info("Screenshot", MediaEntityBuilder.createScreenCaptureFromPath(imageFilePath).build());	
 				ReportUtil.addKeyword(FAIL+": "+stepDesc,keyword,FAIL,imageFilePath);
 				throw e;
@@ -61,6 +59,8 @@ public class Executor implements GlobalVariables{
 	}
 
 	private void executeAction(String keyword, String locator, String selector, String value) throws Exception {		
+		ActionsClass keywordActions = new ActionsClass();
+		Method method[] = keywordActions.getClass().getMethods();
 		boolean keywordFound = false;
 		for(int i = 0;i < method.length;i++){
 			if(method[i].getName().equals(keyword)){

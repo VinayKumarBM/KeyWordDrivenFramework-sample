@@ -27,7 +27,7 @@ public class ReportUtil implements GlobalVariables{
 	public static ArrayList<String> teststatus = new ArrayList<String>();
 	public static ArrayList<String> screenShotPath = new ArrayList<String>();
 
-	public static void startTesting() {
+	public synchronized static void startTesting() {
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {
@@ -84,7 +84,7 @@ public class ReportUtil implements GlobalVariables{
 		}
 	}
 
-	public static void startSuite(String suiteName) {
+	public synchronized static void startSuite(String suiteName) {
 		ReportUtil.suiteName = suiteName;
 		FileWriter fstream = null;
 		BufferedWriter out = null;
@@ -109,7 +109,7 @@ public class ReportUtil implements GlobalVariables{
 		}
 	}
 
-	public static void endSuite() {
+	public synchronized static void endSuite() {
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		try {
@@ -125,7 +125,7 @@ public class ReportUtil implements GlobalVariables{
 		}
 	}
 
-	public static void addTestCase(String testCaseName, String testCaseStartTime, String testCaseEndTime, String status) {
+	public synchronized static void addTestCase(String testCaseName, String testCaseStartTime, String testCaseEndTime, String status) {
 		FileWriter fstream = null;
 		BufferedWriter out = null;
 		String testFilePath = customRerportPath+ suiteName + "_" + testCaseName + ".html";
@@ -214,14 +214,14 @@ public class ReportUtil implements GlobalVariables{
 		screenShotPath = new ArrayList<String>();
 	}
 
-	public static void addKeyword(String desc, String key, String stat, String path) {
+	public synchronized static void addKeyword(String desc, String key, String stat, String path) {
 		description.add(desc);
 		keyword.add(key);
 		teststatus.add(stat);
 		screenShotPath.add(path);
 	}
 
-	public static void updateEndTime() {
+	public synchronized static void updateEndTime() {
 		StringBuffer buf = new StringBuffer();
 		try {
 			// Open the file that is the first

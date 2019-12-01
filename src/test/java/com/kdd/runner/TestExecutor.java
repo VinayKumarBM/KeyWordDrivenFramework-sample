@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.kdd.config.Executor;
+import com.kdd.config.SessionDataManager;
 import com.kdd.reports.ReportManager;
 import com.kdd.utility.Log;
 
@@ -13,15 +15,17 @@ public class TestExecutor extends TestBase{
 
 	@Test (dataProvider = "testCasesList")
 	public void testCasesExecutor(int testRow, String testCase) throws Exception {
-		testCaseName = testCase;
-		testCaseRow = testRow;
-		Log.startTestCase(testCaseName);
-		ReportManager.startTest(testCaseName);
-		executor.executeTestCase(testCaseName);
+		Executor executor = new Executor();		
+		SessionDataManager.getInstance().setSessionData("testCaseName", testCase);
+		SessionDataManager.getInstance().setSessionData("testCaseRow", testRow);
+		Log.startTestCase(testCase);
+		ReportManager.startTest(testCase);
+		executor.executeTestCase(testCase);
 	}
 
-	@DataProvider (name = "testCasesList")
+	@DataProvider (name = "testCasesList")//, parallel = true)
 	public Object[][] getTestCaseList(){
+		Executor executor = new Executor();
 		Map<Integer, String> mapOfTestCases = executor.getListOfTestCasesToExecute();
 		Object[][] testCaseList = new Object[mapOfTestCases.size()][2];
 		int i=0;

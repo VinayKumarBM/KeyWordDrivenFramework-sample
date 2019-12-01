@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="KDD Suite">
+<suite name="KDD Suite" data-provider-thread-count="2">
   <test name="KDF Tests">
     <classes>
       <class name="com.kdd.runner.TestExecutor"/>

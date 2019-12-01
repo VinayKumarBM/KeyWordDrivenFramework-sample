@@ -12,14 +12,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReader {
-	private static XSSFSheet excelSheet;
 	private static XSSFWorkbook excelWorkbook;
-	private static XSSFCell cell;
-	private static XSSFRow row;
 	private static Logger log = Logger.getLogger(ExcelReader.class.getName());
 	private static final String RUN_MODE_YES = "YES";
 
-	public static void setExcelFile(String sheetPath) {
+	public synchronized static void setExcelFile(String sheetPath) {
 		try{
 			FileInputStream excelFile = new FileInputStream(sheetPath);
 			excelWorkbook = new XSSFWorkbook(excelFile);			
@@ -28,16 +25,17 @@ public class ExcelReader {
 		}		
 	}
 
-	public static int getNumberOfRows(String sheetName) {
-		excelSheet = excelWorkbook.getSheet(sheetName);
+	public synchronized static int getNumberOfRows(String sheetName) {
+		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
 		int numberOfRows = excelSheet.getPhysicalNumberOfRows();
 		log.debug("Number Of Rows: "+numberOfRows);
 		return numberOfRows;
 	}
 
-	public static String getCellData(int rowNumb, int colNumb) throws Exception{
+	public synchronized static String getCellData(int rowNumb, int colNumb, String sheetName) throws Exception{
 		try{
-			cell = excelSheet.getRow(rowNumb).getCell(colNumb);
+			XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
+			XSSFCell cell = excelSheet.getRow(rowNumb).getCell(colNumb);
 			//log.debug("Getting cell data.");
 			if(cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
 				cell.setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -50,11 +48,14 @@ public class ExcelReader {
 		}
 	}
 
-	public static void clearColumnData(String sheetName, int colNumb, String excelFilePath) {
+	public synchronized static void clearColumnData(String sheetName, int colNumb, String excelFilePath) {
 		int rowCount = getNumberOfRows(sheetName);
+		XSSFRow row;
+		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
 		for(int i=1; i< rowCount; i++) {
-			cell = excelSheet.getRow(i).getCell(colNumb);
+			XSSFCell cell = excelSheet.getRow(i).getCell(colNumb);
 			if(cell==null){
+				row = excelSheet.getRow(i);
 				cell = row.createCell(colNumb);
 			}
 			cell.setCellValue("");			
@@ -63,9 +64,10 @@ public class ExcelReader {
 		writingDataIntoFile(excelFilePath);
 	}
 
-	public static void setCellData(String result, int rowNumb, int colNumb, String excelFilePath) {		
-		row = excelSheet.getRow(rowNumb);
-		cell = row.getCell(colNumb);
+	public synchronized static void setCellData(String result, int rowNumb, int colNumb, String excelFilePath, String sheetName) {	
+		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
+		XSSFRow row = excelSheet.getRow(rowNumb);
+		XSSFCell cell = row.getCell(colNumb);
 		log.debug("Setting results into the excel sheet.");
 		if(cell==null){
 			cell = row.createCell(colNumb);
@@ -75,7 +77,7 @@ public class ExcelReader {
 		writingDataIntoFile(excelFilePath);		
 	}
 
-	private static void writingDataIntoFile(String excelFilePath) {
+	private synchronized static void writingDataIntoFile(String excelFilePath) {
 		try{
 			FileOutputStream fileOut = new FileOutputStream(excelFilePath);
 			excelWorkbook.write(fileOut);
@@ -86,13 +88,13 @@ public class ExcelReader {
 		}
 	}
 
-	public static Map<Integer, String> getTestCasesToRun(String sheetName, int runModeColumn, int testCaseColumn) {
+	public synchronized static Map<Integer, String> getTestCasesToRun(String sheetName, int runModeColumn, int testCaseColumn) {
 		Map<Integer, String> testListMap = new HashMap<Integer, String>();
 		try {
 			int rowCount = getNumberOfRows(sheetName);
 			String testCase;
 			for(int i=1; i< rowCount; i++) {
-				testCase = getTestCaseToRun(i, runModeColumn, testCaseColumn);
+				testCase = getTestCaseToRun(i, runModeColumn, testCaseColumn, sheetName);
 				if(testCase != null) {
 					testListMap.put(i,testCase);
 				}
@@ -103,11 +105,11 @@ public class ExcelReader {
 		return testListMap;
 	}
 
-	private static String getTestCaseToRun(int row, int runModeColumn, int testCaseColumn) {
+	private synchronized static String getTestCaseToRun(int row, int runModeColumn, int testCaseColumn, String sheetName) {
 		String testCaseName = null;
 		try{
-			if(getCellData(row, runModeColumn).equalsIgnoreCase(RUN_MODE_YES)){
-				testCaseName = getCellData(row, testCaseColumn).trim();
+			if(getCellData(row, runModeColumn, sheetName).equalsIgnoreCase(RUN_MODE_YES)){
+				testCaseName = getCellData(row, testCaseColumn, sheetName).trim();
 				log.debug("Test Case to Run: "+testCaseName);
 			} 
 		} catch(Exception exp){

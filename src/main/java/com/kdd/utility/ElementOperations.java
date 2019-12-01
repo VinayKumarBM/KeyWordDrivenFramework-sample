@@ -15,12 +15,12 @@ import com.kdd.exceptions.InvalidLocatorException;
 public class ElementOperations {
 
 	public WebElement getElement(String locator, String selector) throws InvalidLocatorException {
-		WebElement element = DriverManager.getDriver().findElement(getElementBy(locator, selector));
+		WebElement element = DriverManager.getInstance().getDriver().findElement(getElementBy(locator, selector));
 		return element;
 	}
 
 	public List<WebElement> getElements(String locator, String selector) throws InvalidLocatorException {
-		List<WebElement> elements = DriverManager.getDriver().findElements(getElementBy(locator, selector));
+		List<WebElement> elements = DriverManager.getInstance().getDriver().findElements(getElementBy(locator, selector));
 		return elements;
 	}
 
@@ -67,20 +67,20 @@ public class ElementOperations {
 	}
 
 	public WebElement waitForVisiblityOfElement(String locator, String selector, long timeOutInSeconds) throws InvalidLocatorException {
-		WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), timeOutInSeconds);
+		WebDriverWait wait = new WebDriverWait(DriverManager.getInstance().getDriver(), timeOutInSeconds);
 		return wait.until(ExpectedConditions.visibilityOf(getElement(locator, selector)));
 	}
 
 	public void switchToFrame(String locator, String selector) throws InvalidLocatorException {
-		DriverManager.getDriver().switchTo().frame(getElement(locator, selector));
+		DriverManager.getInstance().getDriver().switchTo().frame(getElement(locator, selector));
 	}
 
 	public void switchToDefaultContent() {
-		DriverManager.getDriver().switchTo().defaultContent();
+		DriverManager.getInstance().getDriver().switchTo().defaultContent();
 	}
 
 	public void moveToObjectAndClick(String locator, String selector) throws InvalidLocatorException {
-		Actions action = new Actions(DriverManager.getDriver());
+		Actions action = new Actions(DriverManager.getInstance().getDriver());
 		action.moveToElement(getElement(locator, selector)).click().build().perform();
 	}
 
