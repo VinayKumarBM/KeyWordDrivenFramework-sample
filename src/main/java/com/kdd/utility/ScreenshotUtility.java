@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 import com.kdd.config.GlobalVariables;
 
 public class ScreenshotUtility implements GlobalVariables{
-	private static Logger log = Logger.getLogger(ScreenshotUtility.class.getName());
+	private static final Logger log = Logger.getLogger(ScreenshotUtility.class.getName());
 	
 	public static String takeScreenShot(WebDriver driver,String testCaseName){
 		// Take screenshot and store as a file format

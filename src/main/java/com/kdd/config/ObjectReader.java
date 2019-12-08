@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 public class ObjectReader implements GlobalVariables{	
 	private Properties properties = new Properties();
-	private final Logger Log = Logger.getLogger(ObjectReader.class.getName());
+	private static final Logger Log = Logger.getLogger(ObjectReader.class.getName());
 	
 	public String getObjectProperty(String key) {
 		try {

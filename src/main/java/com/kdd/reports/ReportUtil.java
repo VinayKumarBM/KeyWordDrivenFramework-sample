@@ -21,7 +21,7 @@ public class ReportUtil implements GlobalVariables{
 	public static int scriptNumber = 1;
 	public static String resultFilename = customRerportPath+htmlFileName;
 	public static String suiteName;
-	private static Logger log = Logger.getLogger(ReportUtil.class.getName());
+	private static final Logger log = Logger.getLogger(ReportUtil.class.getName());
 	public static ArrayList<String> description = new ArrayList<String>();
 	public static ArrayList<String> keyword = new ArrayList<String>();
 	public static ArrayList<String> teststatus = new ArrayList<String>();

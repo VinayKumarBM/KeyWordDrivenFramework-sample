@@ -13,7 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReader {
 	private static XSSFWorkbook excelWorkbook;
-	private static Logger log = Logger.getLogger(ExcelReader.class.getName());
+	private static final Logger log = Logger.getLogger(ExcelReader.class.getName());
 	private static final String RUN_MODE_YES = "YES";
 
 	public synchronized static void setExcelFile(String sheetPath) {
@@ -25,14 +25,14 @@ public class ExcelReader {
 		}		
 	}
 
-	public synchronized static int getNumberOfRows(String sheetName) {
+	public static synchronized int getNumberOfRows(String sheetName) {
 		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
 		int numberOfRows = excelSheet.getPhysicalNumberOfRows();
 		log.debug("Number Of Rows: "+numberOfRows);
 		return numberOfRows;
 	}
 
-	public synchronized static String getCellData(int rowNumb, int colNumb, String sheetName) throws Exception{
+	public synchronized String getCellData(int rowNumb, int colNumb, String sheetName) throws Exception{
 		try{
 			XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
 			XSSFCell cell = excelSheet.getRow(rowNumb).getCell(colNumb);
@@ -48,7 +48,7 @@ public class ExcelReader {
 		}
 	}
 
-	public synchronized static void clearColumnData(String sheetName, int colNumb, String excelFilePath) {
+	public static synchronized void clearColumnData(String sheetName, int colNumb, String excelFilePath) {
 		int rowCount = getNumberOfRows(sheetName);
 		XSSFRow row;
 		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
@@ -64,7 +64,7 @@ public class ExcelReader {
 		writingDataIntoFile(excelFilePath);
 	}
 
-	public synchronized static void setCellData(String result, int rowNumb, int colNumb, String excelFilePath, String sheetName) {	
+	public synchronized void setCellData(String result, int rowNumb, int colNumb, String excelFilePath, String sheetName) {	
 		XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
 		XSSFRow row = excelSheet.getRow(rowNumb);
 		XSSFCell cell = row.getCell(colNumb);
@@ -77,7 +77,7 @@ public class ExcelReader {
 		writingDataIntoFile(excelFilePath);		
 	}
 
-	private synchronized static void writingDataIntoFile(String excelFilePath) {
+	private static synchronized void writingDataIntoFile(String excelFilePath) {
 		try{
 			FileOutputStream fileOut = new FileOutputStream(excelFilePath);
 			excelWorkbook.write(fileOut);
@@ -88,7 +88,7 @@ public class ExcelReader {
 		}
 	}
 
-	public synchronized static Map<Integer, String> getTestCasesToRun(String sheetName, int runModeColumn, int testCaseColumn) {
+	public synchronized Map<Integer, String> getTestCasesToRun(String sheetName, int runModeColumn, int testCaseColumn) {
 		Map<Integer, String> testListMap = new HashMap<Integer, String>();
 		try {
 			int rowCount = getNumberOfRows(sheetName);
@@ -105,7 +105,7 @@ public class ExcelReader {
 		return testListMap;
 	}
 
-	private synchronized static String getTestCaseToRun(int row, int runModeColumn, int testCaseColumn, String sheetName) {
+	private synchronized String getTestCaseToRun(int row, int runModeColumn, int testCaseColumn, String sheetName) {
 		String testCaseName = null;
 		try{
 			if(getCellData(row, runModeColumn, sheetName).equalsIgnoreCase(RUN_MODE_YES)){

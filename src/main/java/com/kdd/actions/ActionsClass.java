@@ -15,7 +15,7 @@ import com.kdd.utility.ElementOperations;
 
 public class ActionsClass implements GlobalVariables{
 
-	private final Logger Log = Logger.getLogger(ActionsClass.class.getName());
+	private static final Logger Log = Logger.getLogger(ActionsClass.class.getName());
 	ElementOperations dom = new ElementOperations();
 	
 	public void click (String locator, String selector, String value) throws InvalidLocatorException {

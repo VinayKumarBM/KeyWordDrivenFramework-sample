@@ -21,13 +21,12 @@ import com.kdd.config.GlobalVariables;
 import com.kdd.config.SessionDataManager;
 import com.kdd.reports.ReportManager;
 import com.kdd.reports.ReportUtil;
-import com.kdd.utility.DateUtility;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.Log;
 
 public class TestBase implements GlobalVariables{
 	
-	final Logger Logs = Logger.getLogger(TestBase.class.getName());
+	private static final Logger Logs = Logger.getLogger(TestBase.class.getName());
 	
 	@BeforeSuite
 	public void configurations(ITestContext context) {
@@ -45,7 +44,6 @@ public class TestBase implements GlobalVariables{
 	
 	@BeforeMethod
 	public void initialization() {
-		SessionDataManager.getInstance().setSessionData("testStartTime", DateUtility.getStringDate("hh.mm.ss aaa"));
 		WebDriver driver = launchBrowser();
 		DriverManager.getInstance().setDriver(driver);
 	}
@@ -53,7 +51,6 @@ public class TestBase implements GlobalVariables{
 	@AfterMethod
 	public void updateStatus(ITestResult result) throws Exception {
 		String status = SKIP;
-		ExcelReader.getNumberOfRows(testDataSheet);
 		if(result.getStatus() == ITestResult.FAILURE) {
 			status = FAIL;								
 		}
@@ -62,10 +59,6 @@ public class TestBase implements GlobalVariables{
 		}
 		Logs.info("Closing all the browser.");
 		String testCaseName = (String) SessionDataManager.getInstance().getSessionData("testCaseName");
-		int testCaseRow = (Integer) SessionDataManager.getInstance().getSessionData("testCaseRow");
-		String testStartTime = (String) SessionDataManager.getInstance().getSessionData("testStartTime");
-		ExcelReader.setCellData(status, testCaseRow, resultColumn, testDataPath, testDataSheet);
-		ReportUtil.addTestCase(testCaseName, testStartTime, DateUtility.getStringDate("hh.mm.ss aaa"), status);				
 		ReportManager.endTest();
 		DriverManager.getInstance().getDriver().quit();
 		Log.endTestCase(testCaseName+" "+status);
