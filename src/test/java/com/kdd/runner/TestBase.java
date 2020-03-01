@@ -24,6 +24,8 @@ import com.kdd.reports.ReportUtil;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.Log;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 public class TestBase implements GlobalVariables{
 	
 	private static final Logger Logs = Logger.getLogger(TestBase.class.getName());
@@ -74,7 +76,7 @@ public class TestBase implements GlobalVariables{
 		String browser = Config.getProperty("browser");
 		WebDriver driver = null;
 		if(browser.equalsIgnoreCase("CHROME")) {
-			System.setProperty("webdriver.chrome.driver", chromePath);
+			WebDriverManager.chromedriver().arch32().setup();
 			ChromeOptions option = new ChromeOptions();
 			option.addArguments("--disable-infobars");
 			driver = new ChromeDriver(option);		

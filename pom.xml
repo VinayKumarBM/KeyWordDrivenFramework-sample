@@ -9,7 +9,7 @@
 		<suiteXmlFile>${basedir}/testng.xml</suiteXmlFile>
 		<skipTests>false</skipTests>
 	</properties>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -96,6 +96,12 @@
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
 			<version>3.1.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>3.8.1</version>
 		</dependency>
 	</dependencies>
 </project>
