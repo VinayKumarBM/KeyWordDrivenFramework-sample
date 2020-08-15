@@ -1,7 +1,5 @@
 package com.kdd.runner;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +8,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
@@ -20,7 +17,6 @@ import com.kdd.config.DriverManager;
 import com.kdd.config.GlobalVariables;
 import com.kdd.config.SessionDataManager;
 import com.kdd.reports.ReportManager;
-import com.kdd.reports.ReportUtil;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.Log;
 
@@ -37,11 +33,8 @@ public class TestBase implements GlobalVariables{
 		Directory directory = new Directory();
 		directory.clearFolder(screenshotFolder);
 		directory.clearFolder(htmlReportPath);
-		directory.clearFolder(customRerportPath);
 		ExcelReader.setExcelFile(testDataPath);
 		ExcelReader.clearColumnData(testDataSheet, resultColumn, testDataPath);
-		ReportUtil.startTesting(); 
-		ReportUtil.startSuite(context.getCurrentXmlTest().getSuite().getName());
 	}
 	
 	@BeforeMethod
@@ -66,12 +59,6 @@ public class TestBase implements GlobalVariables{
 		Log.endTestCase(testCaseName+" "+status);
 	}
 	
-	@AfterSuite
-	public void endTestSuite() {	
-		ReportUtil.endSuite();
-		ReportUtil.updateEndTime();		
-	}
-	
 	private static WebDriver launchBrowser() {
 		String browser = Config.getProperty("browser");
 		WebDriver driver = null;
@@ -83,7 +70,6 @@ public class TestBase implements GlobalVariables{
 		}
 		driver.get(baseURL);
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(implicitWaitTime, TimeUnit.SECONDS);
 		return driver;
 	}
 }

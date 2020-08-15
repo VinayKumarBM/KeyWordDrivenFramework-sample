@@ -18,6 +18,11 @@ public class ReportManager implements GlobalVariables{
 		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(htmlReportPath+htmlFileName);
 		htmlReporter.loadXMLConfig(new File(extentConfigFilePath));
 		extent = new ExtentReports();
+		extent.setSystemInfo("User: ", System.getProperty("user.name"));	
+		extent.setSystemInfo("URL: ", baseURL);
+		extent.setSystemInfo("Browser: ", "Chrome");
+		extent.setSystemInfo("OS: ", System.getProperty("os.name"));
+		extent.setSystemInfo("Version: ", System.getProperty("os.version"));		
 		extent.attachReporter(htmlReporter); 
 		return extent;
 	}

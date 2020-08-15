@@ -1,13 +1,16 @@
 package com.kdd.config;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class SessionDataManager {
 
 	private static SessionDataManager SESSION_DATA_MANAGER;
-	private static ThreadLocal<Map<String,Object>> tSessionData = new ThreadLocal<>();
-	private static Map<String,Object> testData = new HashMap<String, Object>();
+	private static ThreadLocal<HashMap<String,Object>> tSessionData = new ThreadLocal<HashMap<String, Object>>() {
+		 @Override
+		    protected HashMap<String, Object> initialValue() {
+		        return new HashMap<>();
+		    }
+	};
 	
 	private SessionDataManager() {
 		
@@ -25,17 +28,11 @@ public class SessionDataManager {
 	}
 	
 	public synchronized void setSessionData (String key, Object value) {
-		testData.put(key, value);
-		tSessionData.set(testData);
+		tSessionData.get().put(key, value);
 	}
 
 	public synchronized Object getSessionData (String key) {
-		Map<String,Object> sessionData = tSessionData.get();
-		if (sessionData == null) {
-			throw new IllegalStateException("Session data is NULL !!");
-		}
-		System.out.println("Data in Session for key: "+key+" is: "+sessionData.get(key));
-		return sessionData.get(key);
+		return tSessionData.get().get(key);
 	}
 
 }
