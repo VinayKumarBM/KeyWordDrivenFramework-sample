@@ -10,7 +10,6 @@ import com.kdd.config.ExcelManager;
 import com.kdd.config.Executor;
 import com.kdd.config.SessionDataManager;
 import com.kdd.reports.ReportManager;
-import com.kdd.reports.ReportUtil;
 import com.kdd.utility.DateUtility;
 import com.kdd.utility.ExcelReader;
 import com.kdd.utility.Log;
@@ -29,9 +28,6 @@ public class TestExecutor extends TestBase{
 		ReportManager.startTest(testCase);
 		executor.executeTestCase(testCase);
 		ExcelManager.getInstance().getExcelReader().setCellData(PASS, testRow, resultColumn, testDataPath, testDataSheet);
-		String testCaseName = (String) SessionDataManager.getInstance().getSessionData("testCaseName");
-		String testStartTime = (String) SessionDataManager.getInstance().getSessionData("testStartTime");
-		ReportUtil.addTestCase(testCaseName, testStartTime, DateUtility.getStringDate("hh.mm.ss aaa"), PASS);	
 	}
 
 	@DataProvider (name = "testCasesList", parallel = true)

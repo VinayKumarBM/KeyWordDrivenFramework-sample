@@ -1,27 +1,42 @@
 package com.kdd.utility;
 
 import java.util.List;
-
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.kdd.config.DriverManager;
+import com.kdd.config.GlobalVariables;
 import com.kdd.exceptions.InvalidLocatorException;
 
-public class ElementOperations {
+public class ElementOperations implements GlobalVariables{
 
-	public WebElement getElement(String locator, String selector) throws InvalidLocatorException {
-		WebElement element = DriverManager.getInstance().getDriver().findElement(getElementBy(locator, selector));
-		return element;
+	private static final Logger Log = Logger.getLogger(ElementOperations.class.getName());
+
+	private String[] getElementLocator(String locatorDetails) {		
+		return locatorDetails.split("\\|");
 	}
 
-	public List<WebElement> getElements(String locator, String selector) throws InvalidLocatorException {
-		List<WebElement> elements = DriverManager.getInstance().getDriver().findElements(getElementBy(locator, selector));
-		return elements;
+	public static void pause(long value) {
+		try {
+			Thread.sleep(value * 1000);
+		} catch (NumberFormatException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected WebElement getElement(WebDriver driver, String locatorDetails) throws InvalidLocatorException {
+		String[] locator = getElementLocator(locatorDetails);
+		return driver.findElement(getElementBy(locator[0].trim(), locator[1].trim()));
+	}
+
+	protected List<WebElement> getElements(WebDriver driver, String locatorDetails) throws InvalidLocatorException {
+		String[] locator = getElementLocator(locatorDetails);
+		return driver.findElements(getElementBy(locator[0].trim(), locator[1].trim()));		
 	}
 
 	private By getElementBy(String locator, String selector) throws InvalidLocatorException {
@@ -35,11 +50,11 @@ public class ElementOperations {
 			byLocator = By.name(selector);
 			break;
 		}
-		case "partiallinktext": {
+		case "partiallink": {
 			byLocator = By.partialLinkText(selector);
 			break;
 		}
-		case "linktext": {
+		case "link": {
 			byLocator = By.linkText(selector);
 			break;
 		}
@@ -51,7 +66,7 @@ public class ElementOperations {
 			byLocator = By.tagName(selector);
 			break;
 		}
-		case "cssselector": {
+		case "css": {
 			byLocator = By.cssSelector(selector);
 			break;
 		}
@@ -66,25 +81,50 @@ public class ElementOperations {
 		return byLocator;
 	}
 
-	public WebElement waitForVisiblityOfElement(String locator, String selector, long timeOutInSeconds) throws InvalidLocatorException {
-		WebDriverWait wait = new WebDriverWait(DriverManager.getInstance().getDriver(), timeOutInSeconds);
-		return wait.until(ExpectedConditions.visibilityOf(getElement(locator, selector)));
+	protected String getElementText(WebElement element) {
+		String text = element.getText().trim();
+		Log.info("Message: "+text);
+		return text;
 	}
 
-	public void switchToFrame(String locator, String selector) throws InvalidLocatorException {
-		DriverManager.getInstance().getDriver().switchTo().frame(getElement(locator, selector));
+	protected boolean isElementDisplayed(WebElement element) {
+		try {
+			return element.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
-	public void switchToDefaultContent() {
-		DriverManager.getInstance().getDriver().switchTo().defaultContent();
+	protected void enterText(WebElement element, String data) {		
+		element.clear();
+		Log.info("Entering text: "+data);
+		element.sendKeys(data);
 	}
 
-	public void moveToObjectAndClick(String locator, String selector) throws InvalidLocatorException {
-		Actions action = new Actions(DriverManager.getInstance().getDriver());
-		action.moveToElement(getElement(locator, selector)).click().build().perform();
+	protected WebElement getElementByReplacingText(WebDriver driver, String locatorDetails, String key) throws InvalidLocatorException {
+		return getElement(driver, String.format(locatorDetails, key));
 	}
 
-	public void selectFromDropdown(String locator, String selector, String value) throws InvalidLocatorException {
-		new Select(getElement(locator, selector)).selectByVisibleText(value);
+	protected WebElement waitForVisiblityOfElement(WebDriver driver, WebElement element, long timeOutInSeconds) throws InvalidLocatorException {
+		WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+		return wait.until(ExpectedConditions.visibilityOf(element));
+	}
+
+	protected void switchToFrame(WebDriver driver, WebElement element) throws InvalidLocatorException {
+		driver.switchTo().frame(element);
+	}
+
+	protected void switchToDefaultContent(WebDriver driver) {
+		driver.switchTo().defaultContent();
+	}
+
+	protected void moveToObjectAndClick(WebDriver driver, WebElement element) throws InvalidLocatorException {
+		Actions action = new Actions(driver);
+		action.moveToElement(element).click().build().perform();
+	}
+
+	protected void selectByVisibleText(WebElement element, String text) {
+		Log.info("Selecting: "+text);
+		new Select(element).selectByVisibleText(text);
 	}
 }

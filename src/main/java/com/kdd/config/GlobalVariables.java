@@ -4,11 +4,9 @@ public interface GlobalVariables {
 
 	String baseDirectory = System.getProperty("user.dir");
 	String configPath = baseDirectory+"/config.properties";
-	String objectRepository = baseDirectory+"/src/main/java/com/kdd/objects/object.properties";
-	String chromePath = baseDirectory+"/src/test/resources/drivers/chromedriver.exe";
 
 	// Application URL
-	String baseURL = "http://automationpractice.com/index.php";
+	String baseURL = "https://jpetstore.aspectran.com/catalog/";
 
 	// Path to test data sheet with test cases to run and test case details
 	String testDataPath = baseDirectory+"/src/test/resources/data/TestDataSheet.xlsx";
@@ -22,16 +20,14 @@ public interface GlobalVariables {
 	int testStepsColumn = 0;
 	int testStepDescriptionColumn = 1;
 	int keywordColumn = 2;
-	int objectsColumn = 3;
-	int locatorsColumn = 4;
-	int valuesColumn = 5;	
+	int dataColumn = 3;	
 
 	String PASS = "PASS";
 	String FAIL = "FAIL";
 	String SKIP = "SKIP";
 
 	// Wait times
-	long implicitWaitTime = 10;
+	int implicitWaitTime = 10;
 	long objectWaitTime = 30;
 
 	// Screenshot folder and file details
@@ -42,7 +38,4 @@ public interface GlobalVariables {
 	String extentConfigFilePath = baseDirectory+"/extent-config.xml";
 	String htmlReportPath = baseDirectory+"/target/html-report/";
 	String htmlFileName = "index.html";
-	
-	// Custom report related details
-	String customRerportPath = baseDirectory+"/reports/";
 }

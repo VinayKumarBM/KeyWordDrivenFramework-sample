@@ -2,93 +2,142 @@ package com.kdd.actions;
 
 import static org.testng.Assert.*;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.openqa.selenium.WebElement;
 
 import com.kdd.config.GlobalVariables;
-import com.kdd.config.Session;
+import com.kdd.config.SessionDataManager;
 import com.kdd.exceptions.InvalidLocatorException;
-import com.kdd.utility.DateUtility;
-import com.kdd.utility.ElementOperations;
+import com.kdd.pages.BillingDetailsPage;
+import com.kdd.pages.HomePage;
+import com.kdd.pages.OrderPage;
+import com.kdd.pages.ProductsPage;
+import com.kdd.pages.RegisterationPage;
+import com.kdd.pages.ShoppingCartPage;
+import com.kdd.pages.SignInPage;
 
 public class ActionsClass implements GlobalVariables{
-
 	private static final Logger Log = Logger.getLogger(ActionsClass.class.getName());
-	ElementOperations dom = new ElementOperations();
-	
-	public void click (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.getElement(locator, selector).click();
+	private HomePage homePage = new HomePage(); 
+	private SignInPage loginPage = new SignInPage();
+	private RegisterationPage registerationPage = new RegisterationPage(); 
+	private ProductsPage productsPage = new ProductsPage();
+	private ShoppingCartPage cartPage = new ShoppingCartPage();
+	private BillingDetailsPage billingDetailsPage = new BillingDetailsPage();
+	private OrderPage orderPage = new OrderPage();
+		
+	public void navigateToRegistrationScreen(String data) throws InvalidLocatorException {		
+		homePage.clickSignupLink();
 	}
 	
-	public void enterText (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.getElement(locator, selector).sendKeys(value);
+	public void navigateToLoginScreen(String data) throws InvalidLocatorException {	
+		homePage.clickSigninLink();
+	}
+	
+	public void  navigateToShoppingCart(String data) throws InvalidLocatorException {		
+		homePage.clickCartLink();
+	}
+	
+	public void login(String data) throws InvalidLocatorException {
+		String[] dataArray = data.split("\\|");
+		loginToStore(dataArray[0], dataArray[1]);
 	}
 
-	public void clearAndEnterText (String locator, String selector, String value) throws InvalidLocatorException {
-		WebElement element = dom.getElement(locator, selector);
-		element.clear();
-		element.sendKeys(value);
+	public void loginWithNewUser(String data) throws InvalidLocatorException {
+		loginToStore((String) SessionDataManager.getInstance().getSessionData("userName"), 
+				(String) SessionDataManager.getInstance().getSessionData("password"));
 	}
 	
-	public void enterRandomEmailID (String locator, String selector, String value) throws InvalidLocatorException {
-		value = "jondoe"+DateUtility.getStringDate("_ddMMyyyyHHmmss")+"@gamil.com";
-		Log.info("Random email Id: "+value);
-		enterText(locator, selector, value);
+	private void loginToStore(String userName, String password) {
+		loginPage.enterUserName(userName);
+		loginPage.enterPassword(password);
+		loginPage.clickLoginButton();
+		assertTrue(homePage.isSignOutLinkDisplayed(), "Login unsuccessful");
 	}
 	
-	public void validateDataOnScreenMatches (String locator, String selector, String value) throws InvalidLocatorException {
-		String onScreenText = dom.getElement(locator, selector).getText();
-		Log.info("Data on the screen: "+onScreenText);
-		assertEquals(onScreenText, value, "On Screen Text did not match");
-	}
-	
-	public void waitForObjectToAppear (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.waitForVisiblityOfElement(locator, selector, objectWaitTime);
-	}
-	
-	public void switchToFrame (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.switchToFrame(locator, selector);
-	}
-	
-	public void switchToDefaultContent (String locator, String selector, String value) {
-		dom.switchToDefaultContent();
-	}
-	
-	public void moveToObjectAndClick (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.moveToObjectAndClick(locator, selector);
-	}
-	
-	public void selectFromDropdown (String locator, String selector, String value) throws InvalidLocatorException {
-		dom.selectFromDropdown(locator, selector, value);
-	}
-	
-	public void validateDataOnScreenContains (String locator, String selector, String value) throws InvalidLocatorException {
-		String onScreenText = dom.getElement(locator, selector).getText().toLowerCase();
-		Log.info("Text on screen: "+onScreenText);
-		assertTrue(onScreenText.contains(value.toLowerCase()), "On screen text "+onScreenText+" did not contain "+value.toLowerCase());
-	}
-	
-	public void validateSearchResults (String locator, String selector, final String value) throws InvalidLocatorException {
-		List<WebElement> eleList = dom.getElements(locator, selector);
-		Session.setVariable("resultCount", eleList.size());
-		eleList.stream().forEach(rs->{
-			Log.info(rs.getText());
-			assertTrue(rs.getText().toLowerCase().contains(value.toLowerCase()), "Search Result did not match");
-		});
-	}
-	
-	public void validateSearchResultCount (String locator, String selector, String value) throws InvalidLocatorException {
-		String resultCountDetails = dom.getElement(locator, selector).getText();
-		assertTrue(resultCountDetails.contains(String.valueOf(Session.getVariable().get("resultCount"))));
-	}
-	
-	public void pause(String locator, String selector, String value) {
-		try {
-			Thread.sleep(Long.parseLong(value) * 1000);
-		} catch (NumberFormatException | InterruptedException e) {
-			Log.error("Exception Occured:", e);
+	public void enterRegisterationDetails(String data) throws InvalidLocatorException {
+		String[] dataArray = data.split("\\|");
+		String userName = dataArray[0]+System.nanoTime();
+		SessionDataManager.getInstance().setSessionData("userName", userName);
+		SessionDataManager.getInstance().setSessionData("password", dataArray[1]);
+		loginPage.enterUserName(userName);
+		loginPage.enterPassword(dataArray[1]);
+		registerationPage.enterConfirmPassowrd(dataArray[2]);
+		registerationPage.enterFirstName(dataArray[3]);
+		registerationPage.enterLastName(dataArray[4]);
+		registerationPage.enterEmail(dataArray[5]);
+		registerationPage.enterTelephone(dataArray[6]);
+		registerationPage.enterAddress1(dataArray[7]);
+		registerationPage.enterAddress2(dataArray[8]);
+		registerationPage.enterCity(dataArray[9]);
+		registerationPage.enterState(dataArray[10]);
+		registerationPage.enterZip(dataArray[11]);
+		registerationPage.enterCountry(dataArray[12]);
+		registerationPage.selectLanguage(dataArray[13]);
+		registerationPage.selectFavouriteCategory(dataArray[14]);
+		if(dataArray[15].equalsIgnoreCase("yes")) {
+			registerationPage.clickMyList();
 		}
+		if(dataArray[16].equalsIgnoreCase("yes")) {
+			registerationPage.clickMyBanner();
+		}
+	}
+	
+	public void clickSaveButton(String data) throws InvalidLocatorException {
+		registerationPage.clickSaveButton();
+	}
+	
+	public void validateSuccessMessage(String data) throws InvalidLocatorException {	
+		assertEquals(registerationPage.getMessage(), data);
+	}
+
+	public void validateMessageContainsText(String data) throws InvalidLocatorException {	
+		Log.info("Expected Message: "+data);
+		assertTrue(registerationPage.getMessage().contains(data));
+	}
+	
+	public void logout(String data) throws InvalidLocatorException {		
+		homePage.clickLogoutLink();
+		assertTrue(homePage.isSignInLinkDisplayed(), "Logout unsuccessful");
+	}
+	
+	public void searchForPet(String data) throws InvalidLocatorException {
+		homePage.searchPet(data);
+		homePage.clickSearchButton();
+		assertTrue(homePage.isSearchResultDisplayed(), "Search Results were not displayed");
+	}
+
+	public void selectAPet(String data) throws InvalidLocatorException {
+		productsPage.selectFirstPetFromSearchResult();
+	}
+	
+	public void addToCart(String data) throws InvalidLocatorException {
+		productsPage.clickAddToCartButton();
+	}
+	
+	public void updateCart(String data) throws InvalidLocatorException {
+		cartPage.changeQuantity(data);
+		cartPage.clickUpdateCartButton();
+	}
+	
+	public void proceedToCheckout(String data) throws InvalidLocatorException {
+		cartPage.clickProceedToCheckoutButton();
+	}
+	
+	public void continueCheckout(String data) throws InvalidLocatorException {
+		billingDetailsPage.clickContinueButton();
+	}
+	
+	public void confirmOrder(String data) throws InvalidLocatorException {
+		orderPage.clickConfirmButton();
+	}
+	
+	public void validateOrderDetails(String data) throws InvalidLocatorException {
+		String[] dataArray = data.split("\\|");		
+		assertTrue(orderPage.isOrderNoDisplayed(), "Order No did not displayed");
+		assertTrue(orderPage.isOrderDateDisplayed(), "Order Date was not displayed");
+		orderPage.getOrderNo();
+		Log.info("Expected Message: "+dataArray[0]);
+		assertTrue(orderPage.getDescription().contains(dataArray[0]));
+		assertEquals(orderPage.getQuality(), dataArray[1], "Quantity did not match");		
 	}
 }
