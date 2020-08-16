@@ -45,4 +45,35 @@ public class ShippingAddressPage extends ElementOperations {
 	@FindBy(xpath = "//button[text()='Back']")
 	private WebElement backButton;
 
+	public void updateFirstName(String firstName) {
+		enterText(shipToFirstNameTextbox, firstName);
+	}
+	
+	public void updateLastName(String lastName) {
+		enterText(shipToLastNameTextbox, lastName);
+	}
+	
+	public void updateAddress1(String address1) {
+		enterText(shipAddress1Textbox, address1);
+	}
+	
+	public void updateAddress2(String address2) {
+		enterText(shipAddress2Textbox, address2);
+	}
+	
+	public void updateCity(String city) {
+		enterText(shipCityTextbox, city);
+	}
+	
+	public void updateState(String state) {
+		enterText(shipStateTextbox, state);
+	}
+	
+	public void updateZip(String zip) {
+		enterText(shipZipTextbox, zip);
+	}
+	
+	public void updateCountry(String country) {
+		enterText(shipCountryTextbox, country);
+	}
 }

@@ -67,4 +67,52 @@ public class BillingDetailsPage extends ElementOperations {
 	public void clickCancelButton() {
 		cancelButton.click();
 	}
+	
+	public void selectCardType(String cardType) {
+		selectByVisibleText(cardTypeDropdown, cardType);
+	}
+	
+	public void updateCardNumber(String cardNumber) {
+		enterText(creditCardTextbox, cardNumber);
+	}
+	
+	public void updateExpiryDate(String date) {
+		enterText(expiryDateTextbox, date);
+	}
+	
+	public void updateFirstName(String firstName) {
+		enterText(billToFirstNameTextbox, firstName);
+	}
+	
+	public void updateLastName(String lastName) {
+		enterText(billToLastNameTextbox, lastName);
+	}
+	
+	public void updateAddress1(String address1) {
+		enterText(billAddress1Textbox, address1);
+	}
+	
+	public void updateAddress2(String address2) {
+		enterText(billAddress2Textbox, address2);
+	}
+	
+	public void updateCity(String city) {
+		enterText(billCityTextbox, city);
+	}
+	
+	public void updateState(String state) {
+		enterText(billStateTextbox, state);
+	}
+	
+	public void updateZip(String zip) {
+		enterText(billZipTextbox, zip);
+	}
+	
+	public void updateCountry(String country) {
+		enterText(billCountryTextbox, country);
+	}
+	
+	public void shipToDifferentAddress() {
+		differentShippingAddressCheckbox.click();
+	}
 }

@@ -7,6 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import com.kdd.config.DriverManager;
+import com.kdd.exceptions.InvalidLocatorException;
 import com.kdd.utility.ElementOperations;
 
 public class HomePage extends ElementOperations {
@@ -44,6 +45,8 @@ public class HomePage extends ElementOperations {
 	
 	@FindBy(name = "img_cart")
 	private WebElement cartLink;
+	
+	private final String CATEGORIES_LINK = "xpath|//div[@id='QuickLinks']/a[text()='%s']";
 
 	public void clickMyAccountLink() {
 		myAccountLink.click();
@@ -87,5 +90,9 @@ public class HomePage extends ElementOperations {
 	
 	public boolean isPageHeadingDisplayed() {
 		return isElementDisplayed(headingText);
+	}
+	
+	public void selectPetByCategory(String category) throws InvalidLocatorException {
+		getElementByReplacingText(driver, CATEGORIES_LINK, category).click();
 	}
 }

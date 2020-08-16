@@ -1,5 +1,7 @@
 package com.kdd.pages;
 
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,8 +22,20 @@ public class ProductsPage extends ElementOperations {
 	}
 	
 	@FindBy (xpath = "//th[text()='Product ID']/../../tr/td[1]//a")
-	private WebElement petIDLink;
-			
+	private WebElement productIDLink;
+	
+	@FindBy (xpath = "//th[text()='Description']/../../tr/td[3]")
+	private WebElement petDescriptionText;
+	
+	@FindBy (css = "strong>small")
+	private WebElement petPDPDescriptionText;
+	
+	@FindBy (xpath = "//th[text()='Item ID']/../../tr/td[1]//a")
+	private WebElement itemIDLink;
+	
+	@FindBy (xpath = "//input[@type='number']/../preceding-sibling::td[2]")
+	private List<WebElement> cartPetDescriptionText;
+	
 	@FindBy (linkText = "Add to Cart")
 	private WebElement addToCartButton;
 	
@@ -32,10 +46,26 @@ public class ProductsPage extends ElementOperations {
 	}
 	
 	public void selectFirstPetFromSearchResult() {
-		petIDLink.click();
+		productIDLink.click();
+	}
+	
+	public void selectFirstPetID() {
+		itemIDLink.click();
 	}
 	
 	public void selectPetByID(String petId) throws InvalidLocatorException {
 		getElementByReplacingText(driver, PET_BY_ID, petId).click();
 	}
+	
+	public String getPetDescritpion() {
+		return getElementText(petDescriptionText);
+	}
+	
+	public String getPetPDPDescritpion() {
+		return getElementText(petPDPDescriptionText);
+	}
+	
+	public String getPetCartDescritpion() {
+		return getElementText(cartPetDescriptionText.get(cartPetDescriptionText.size()-1));
+	} 
 }

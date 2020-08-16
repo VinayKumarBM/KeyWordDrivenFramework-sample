@@ -12,6 +12,7 @@ import com.kdd.pages.HomePage;
 import com.kdd.pages.OrderPage;
 import com.kdd.pages.ProductsPage;
 import com.kdd.pages.RegisterationPage;
+import com.kdd.pages.ShippingAddressPage;
 import com.kdd.pages.ShoppingCartPage;
 import com.kdd.pages.SignInPage;
 
@@ -23,6 +24,7 @@ public class ActionsClass implements GlobalVariables{
 	private ProductsPage productsPage = new ProductsPage();
 	private ShoppingCartPage cartPage = new ShoppingCartPage();
 	private BillingDetailsPage billingDetailsPage = new BillingDetailsPage();
+	private ShippingAddressPage shippingAddressPage = new ShippingAddressPage();
 	private OrderPage orderPage = new OrderPage();
 		
 	public void navigateToRegistrationScreen(String data) {		
@@ -39,6 +41,10 @@ public class ActionsClass implements GlobalVariables{
 	
 	public void  navigateToMyOrdersScreen(String data) {		
 		homePage.clickMyOrdersLink();
+	}
+	
+	public void  navigateToMyAccountScreen(String data) {		
+		homePage.clickMyAccountLink();
 	}
 	
 	public void login(String data) {
@@ -58,30 +64,34 @@ public class ActionsClass implements GlobalVariables{
 		assertTrue(homePage.isSignOutLinkDisplayed(), "Login unsuccessful");
 	}
 	
-	public void enterRegisterationDetails(String data) {
+	public void enterUserInformation(String data) {
 		String[] dataArray = data.split("\\|");
 		String userName = dataArray[0]+System.nanoTime();
 		SessionDataManager.getInstance().setSessionData("userName", userName);
 		SessionDataManager.getInstance().setSessionData("password", dataArray[1]);
 		loginPage.enterUserName(userName);
-		loginPage.enterPassword(dataArray[1]);
+		loginPage.enterPassword(dataArray[1]);	
 		registerationPage.enterConfirmPassowrd(dataArray[2]);
-		registerationPage.enterFirstName(dataArray[3]);
-		registerationPage.enterLastName(dataArray[4]);
-		registerationPage.enterEmail(dataArray[5]);
-		registerationPage.enterTelephone(dataArray[6]);
-		registerationPage.enterAddress1(dataArray[7]);
-		registerationPage.enterAddress2(dataArray[8]);
-		registerationPage.enterCity(dataArray[9]);
-		registerationPage.enterState(dataArray[10]);
-		registerationPage.enterZip(dataArray[11]);
-		registerationPage.enterCountry(dataArray[12]);
-		registerationPage.selectLanguage(dataArray[13]);
-		registerationPage.selectFavouriteCategory(dataArray[14]);
-		if(dataArray[15].equalsIgnoreCase("yes")) {
+	}
+	
+	public void enterAccountInformation(String data) {
+		String[] dataArray = data.split("\\|");		
+		registerationPage.enterFirstName(dataArray[0]);
+		registerationPage.enterLastName(dataArray[1]);
+		registerationPage.enterEmail(dataArray[2]);
+		registerationPage.enterTelephone(dataArray[3]);
+		registerationPage.enterAddress1(dataArray[4]);
+		registerationPage.enterAddress2(dataArray[5]);
+		registerationPage.enterCity(dataArray[6]);
+		registerationPage.enterState(dataArray[7]);
+		registerationPage.enterZip(dataArray[8]);
+		registerationPage.enterCountry(dataArray[9]);
+		registerationPage.selectLanguage(dataArray[10]);
+		registerationPage.selectFavouriteCategory(dataArray[11]);
+		if(dataArray[12].equalsIgnoreCase("yes")) {
 			registerationPage.clickMyList();
 		}
-		if(dataArray[16].equalsIgnoreCase("yes")) {
+		if(dataArray[13].equalsIgnoreCase("yes")) {
 			registerationPage.clickMyBanner();
 		}
 	}
@@ -112,10 +122,19 @@ public class ActionsClass implements GlobalVariables{
 
 	public void selectAPet(String data) {
 		productsPage.selectFirstPetFromSearchResult();
+		SessionDataManager.getInstance().setSessionData("petDescription", productsPage.getPetDescritpion());
+	}
+	
+	public void selectPetByID(String data) {
+		productsPage.selectFirstPetID();
+		assertEquals(SessionDataManager.getInstance().getSessionData("petDescription"), productsPage.getPetPDPDescritpion(),
+				"Pet Description did not match on PDP");
 	}
 	
 	public void addToCart(String data) {
 		productsPage.clickAddToCartButton();
+		assertEquals(SessionDataManager.getInstance().getSessionData("petDescription"), productsPage.getPetCartDescritpion(),
+				"Pet Description did not match on Cart");
 	}
 	
 	public void updateCart(String data) {
@@ -136,13 +155,12 @@ public class ActionsClass implements GlobalVariables{
 	}
 	
 	public void validateOrderDetails(String data) {
-		String[] dataArray = data.split("\\|");		
 		assertTrue(orderPage.isOrderNoDisplayed(), "Order No did not displayed");
 		assertTrue(orderPage.isOrderDateDisplayed(), "Order Date was not displayed");
 		orderPage.getOrderNo();
-		Log.info("Expected Message: "+dataArray[0]);
-		assertTrue(orderPage.getDescription().contains(dataArray[0]));
-		assertEquals(orderPage.getQuality(), dataArray[1], "Quantity did not match");		
+		assertEquals(orderPage.getDescription(), SessionDataManager.getInstance().getSessionData("petDescription"),
+				"Pet description did not match on Order Details");
+		assertEquals(orderPage.getQuality(), data, "Quantity did not match");		
 	}
 	
 	public void selectAnOrder(String data) {
@@ -169,5 +187,45 @@ public class ActionsClass implements GlobalVariables{
 	public void removeAllPetFromCart(String data) {
 		cartPage.clickRemoveAllButton();
 		assertEquals(cartPage.getEmptyCartMessage(), data, "Cart was not empty");
+	}
+	
+	public void selectPetCategory(String data) throws InvalidLocatorException {
+		homePage.selectPetByCategory(data);
+		assertTrue(homePage.isPageHeadingDisplayed(), data+" category was not displayed");
+	}
+	
+	public void updatePaymentDetails(String data) {
+		String[] dataArray = data.split("\\|");
+		billingDetailsPage.selectCardType(dataArray[0]);
+		billingDetailsPage.updateCardNumber(dataArray[1]);
+		billingDetailsPage.updateExpiryDate(dataArray[2]);
+	}
+	
+	public void updateBillingAddress(String data) {
+		String[] dataArray = data.split("\\|");
+		billingDetailsPage.updateFirstName(dataArray[0]);
+		billingDetailsPage.updateLastName(dataArray[1]);
+		billingDetailsPage.updateAddress1(dataArray[2]);
+		billingDetailsPage.updateAddress2(dataArray[3]);
+		billingDetailsPage.updateCity(dataArray[4]);
+		billingDetailsPage.updateState(dataArray[5]);
+		billingDetailsPage.updateZip(dataArray[6]);
+		billingDetailsPage.updateCountry(dataArray[7]);
+	}
+	
+	public void changeShippingAddress(String data) {
+		billingDetailsPage.shipToDifferentAddress();
+	}
+	
+	public void updateShippingAddress(String data) {
+		String[] dataArray = data.split("\\|");
+		shippingAddressPage.updateFirstName(dataArray[0]);
+		shippingAddressPage.updateLastName(dataArray[1]);
+		shippingAddressPage.updateAddress1(dataArray[2]);
+		shippingAddressPage.updateAddress2(dataArray[3]);
+		shippingAddressPage.updateCity(dataArray[4]);
+		shippingAddressPage.updateState(dataArray[5]);
+		shippingAddressPage.updateZip(dataArray[6]);
+		shippingAddressPage.updateCountry(dataArray[7]);
 	}
 }
