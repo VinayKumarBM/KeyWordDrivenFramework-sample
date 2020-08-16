@@ -37,7 +37,7 @@ public class HomePage extends ElementOperations {
 	private WebElement searchButton;
 	
 	@FindBy(css = "#Catalog>h3")
-	private WebElement searchResultText;
+	private WebElement headingText;
 	
 	@FindBy(linkText = "My Orders")
 	private WebElement myOrdersLink;
@@ -85,7 +85,7 @@ public class HomePage extends ElementOperations {
 		searchButton.click();
 	}
 	
-	public boolean isSearchResultDisplayed() {
-		return isElementDisplayed(searchResultText);
+	public boolean isPageHeadingDisplayed() {
+		return isElementDisplayed(headingText);
 	}
 }

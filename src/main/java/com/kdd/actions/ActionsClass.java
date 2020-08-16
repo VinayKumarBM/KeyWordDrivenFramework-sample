@@ -25,24 +25,28 @@ public class ActionsClass implements GlobalVariables{
 	private BillingDetailsPage billingDetailsPage = new BillingDetailsPage();
 	private OrderPage orderPage = new OrderPage();
 		
-	public void navigateToRegistrationScreen(String data) throws InvalidLocatorException {		
+	public void navigateToRegistrationScreen(String data) {		
 		homePage.clickSignupLink();
 	}
 	
-	public void navigateToLoginScreen(String data) throws InvalidLocatorException {	
+	public void navigateToLoginScreen(String data) {	
 		homePage.clickSigninLink();
 	}
 	
-	public void  navigateToShoppingCart(String data) throws InvalidLocatorException {		
+	public void  navigateToShoppingCart(String data) {		
 		homePage.clickCartLink();
 	}
 	
-	public void login(String data) throws InvalidLocatorException {
+	public void  navigateToMyOrdersScreen(String data) {		
+		homePage.clickMyOrdersLink();
+	}
+	
+	public void login(String data) {
 		String[] dataArray = data.split("\\|");
 		loginToStore(dataArray[0], dataArray[1]);
 	}
 
-	public void loginWithNewUser(String data) throws InvalidLocatorException {
+	public void loginWithNewUser(String data) {
 		loginToStore((String) SessionDataManager.getInstance().getSessionData("userName"), 
 				(String) SessionDataManager.getInstance().getSessionData("password"));
 	}
@@ -54,7 +58,7 @@ public class ActionsClass implements GlobalVariables{
 		assertTrue(homePage.isSignOutLinkDisplayed(), "Login unsuccessful");
 	}
 	
-	public void enterRegisterationDetails(String data) throws InvalidLocatorException {
+	public void enterRegisterationDetails(String data) {
 		String[] dataArray = data.split("\\|");
 		String userName = dataArray[0]+System.nanoTime();
 		SessionDataManager.getInstance().setSessionData("userName", userName);
@@ -82,56 +86,56 @@ public class ActionsClass implements GlobalVariables{
 		}
 	}
 	
-	public void clickSaveButton(String data) throws InvalidLocatorException {
+	public void clickSaveButton(String data) {
 		registerationPage.clickSaveButton();
 	}
 	
-	public void validateSuccessMessage(String data) throws InvalidLocatorException {	
+	public void validateSuccessMessage(String data) {	
 		assertEquals(registerationPage.getMessage(), data);
 	}
 
-	public void validateMessageContainsText(String data) throws InvalidLocatorException {	
+	public void validateMessageContainsText(String data) {	
 		Log.info("Expected Message: "+data);
 		assertTrue(registerationPage.getMessage().contains(data));
 	}
 	
-	public void logout(String data) throws InvalidLocatorException {		
+	public void logout(String data) {		
 		homePage.clickLogoutLink();
 		assertTrue(homePage.isSignInLinkDisplayed(), "Logout unsuccessful");
 	}
 	
-	public void searchForPet(String data) throws InvalidLocatorException {
+	public void searchForPet(String data) {
 		homePage.searchPet(data);
 		homePage.clickSearchButton();
-		assertTrue(homePage.isSearchResultDisplayed(), "Search Results were not displayed");
+		assertTrue(homePage.isPageHeadingDisplayed(), "Search Results were not displayed");
 	}
 
-	public void selectAPet(String data) throws InvalidLocatorException {
+	public void selectAPet(String data) {
 		productsPage.selectFirstPetFromSearchResult();
 	}
 	
-	public void addToCart(String data) throws InvalidLocatorException {
+	public void addToCart(String data) {
 		productsPage.clickAddToCartButton();
 	}
 	
-	public void updateCart(String data) throws InvalidLocatorException {
+	public void updateCart(String data) {
 		cartPage.changeQuantity(data);
 		cartPage.clickUpdateCartButton();
 	}
 	
-	public void proceedToCheckout(String data) throws InvalidLocatorException {
+	public void proceedToCheckout(String data) {
 		cartPage.clickProceedToCheckoutButton();
 	}
 	
-	public void continueCheckout(String data) throws InvalidLocatorException {
+	public void continueCheckout(String data) {
 		billingDetailsPage.clickContinueButton();
 	}
 	
-	public void confirmOrder(String data) throws InvalidLocatorException {
+	public void confirmOrder(String data) {
 		orderPage.clickConfirmButton();
 	}
 	
-	public void validateOrderDetails(String data) throws InvalidLocatorException {
+	public void validateOrderDetails(String data) {
 		String[] dataArray = data.split("\\|");		
 		assertTrue(orderPage.isOrderNoDisplayed(), "Order No did not displayed");
 		assertTrue(orderPage.isOrderDateDisplayed(), "Order Date was not displayed");
@@ -139,5 +143,31 @@ public class ActionsClass implements GlobalVariables{
 		Log.info("Expected Message: "+dataArray[0]);
 		assertTrue(orderPage.getDescription().contains(dataArray[0]));
 		assertEquals(orderPage.getQuality(), dataArray[1], "Quantity did not match");		
+	}
+	
+	public void selectAnOrder(String data) {
+		SessionDataManager.getInstance().setSessionData("orderId", orderPage.getFirstOrderID());
+		orderPage.selectFirstOrder();
+	}
+	
+	public void deleteOrder(String data) {
+		orderPage.clickDeleteOrderButton();
+		assertTrue(homePage.isPageHeadingDisplayed(), "My Order page was not displayed");
+	}
+	
+	public void validateOrderIsDeleted(String data) {
+		String orderID = (String) SessionDataManager.getInstance().getSessionData("orderId");
+		assertFalse(orderID.equalsIgnoreCase(orderPage.getFirstOrderID()), "Order was not deleted");
+	}
+	
+	public void removePetFromCart(String data) throws InvalidLocatorException {
+		int beforeRemove = cartPage.getPetsInCart();
+		cartPage.clickRemoveButton();
+		assertEquals(cartPage.getPetsInCart(), beforeRemove-1, "Pet was not removed");
+	}
+	
+	public void removeAllPetFromCart(String data) {
+		cartPage.clickRemoveAllButton();
+		assertEquals(cartPage.getEmptyCartMessage(), data, "Cart was not empty");
 	}
 }

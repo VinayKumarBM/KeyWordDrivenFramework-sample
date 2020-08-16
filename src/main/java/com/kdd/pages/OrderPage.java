@@ -48,6 +48,9 @@ public class OrderPage extends ElementOperations {
 	@FindBy(xpath = "//button[text()='Delete Order']")
 	private WebElement deletOrderButton;
 
+	@FindBy(css = "#Catalog a[href*='orderId']")
+	private WebElement orderIdLink;
+	
 	public void clickConfirmButton() {
 		confirmButton.click();
 	}
@@ -74,5 +77,13 @@ public class OrderPage extends ElementOperations {
 	
 	public String getQuality() {
 		return getElementText(quantityText);
+	}
+	
+	public void selectFirstOrder() {
+		orderIdLink.click();
+	}
+	
+	public String getFirstOrderID() {
+		return getElementText(orderIdLink);
 	}
 }
