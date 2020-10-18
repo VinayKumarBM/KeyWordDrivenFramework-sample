@@ -6,6 +6,8 @@ Keyword-driven testing is a type of functional automation testing framework whic
 
 In Keyword-driven testing, we use a table format, usually a spreadsheet, to define keywords or action words for each function that we would like to execute.
 
+For Demo purpose all the test cases are created for [JPetStore Demo](https://jpetstore.aspectran.com/catalog) site.
+
 **Components of a Keyword Driven Framework**
 
 1. **Excel Sheet** :  It is used to store the data for test cases such as keywords, data values etc.
